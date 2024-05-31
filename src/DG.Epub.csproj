@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<ProjectGuid>354dcb2f-5995-4bd9-bb0a-24b3dfdee855</ProjectGuid>
+		<TargetFramework>net452</TargetFramework>
+		<AssemblyTitle>DG.Epub</AssemblyTitle>
+		<AssemblyVersion>0.0.1</AssemblyVersion>
+		<Product>DG.Epub</Product>
+		<Copyright>Copyright ©  2024</Copyright>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>DG.Epub</Title>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/dennisvg111/dg-epub</RepositoryUrl>
+		<Deterministic>false</Deterministic>
+		<PackageId>Dennisvg.$(AssemblyName)</PackageId>
+		<Company>$(AssemblyName)</Company>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<Authors>dennisvg111</Authors>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>utilities</PackageTags>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<Version>$(AssemblyVersion)</Version>
+		<Description>Epub reading &amp; writing tool</Description>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugType>full</DebugType>
+		<GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>pdbonly</DebugType>
+		<GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Dennisvg.DG.Common" Version="1.13.3" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="System.Data.DataSetExtensions" />
+		<Reference Include="Microsoft.CSharp" />
+	</ItemGroup>
+</Project>
