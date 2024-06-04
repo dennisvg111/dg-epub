@@ -8,7 +8,7 @@ namespace DG.Epub
 
         public static EpubBook FromStream(Stream s)
         {
-            using (ZipArchive zip = new ZipArchive(s))
+            using (ZipArchive zip = new ZipArchive(s, ZipArchiveMode.Read, false, null))
             {
                 return null;
             }
