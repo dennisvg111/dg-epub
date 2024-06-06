@@ -32,11 +32,8 @@
 		<ProjectReference Include="..\src\DG.Epub.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\examples\minimal.epub">
+		<None Include="..\examples\*.epub">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Include="..\examples\spec.epub">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 </Project>

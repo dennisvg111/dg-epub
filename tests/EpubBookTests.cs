@@ -8,7 +8,7 @@ namespace DG.Epub.Tests
         [Fact]
         public void FromStream_Tests()
         {
-            using (var exampleStream = File.OpenRead("spec.epub"))
+            using (var exampleStream = File.OpenRead("minimal-v3.epub"))
             {
                 var book = EpubBook.FromStream(exampleStream);
             }
