@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Compression;
-using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -13,8 +12,31 @@ namespace DG.Epub.Extensions
         {
             DtdProcessing = DtdProcessing.Ignore
         };
+        private static readonly IReadOnlyCollection<Func<string, string>> _entryNameTransformations = new Func<string, string>[]
+        {
+            (n) => "/" + n,
+            (n) => "\\" + n,
+            (n) => n.Replace("\\", "/"),
+            (n) => n.Replace("/", "\\"),
+            (n) => "/" + n.Replace("\\", "/"),
+            (n) => "\\" + n.Replace("/", "\\"),
+            (n) => Uri.UnescapeDataString(n),
+            (n) => Uri.UnescapeDataString("/" + n),
+            (n) => Uri.UnescapeDataString("\\" + n),
+            (n) => Uri.UnescapeDataString(n.Replace("\\", "/")),
+            (n) => Uri.UnescapeDataString(n.Replace("/", "\\")),
+            (n) => Uri.UnescapeDataString("/" + n.Replace("\\", "/")),
+            (n) => Uri.UnescapeDataString("\\" + n.Replace("/", "\\"))
+        };
 
-        public static bool TryGetEntry(this ZipArchive archive, string entryName, out ZipArchiveEntry entry)
+        /// <summary>
+        /// Searches for an entry based on a path, using different combinations of path seperators and leading slashes to try to find the entry.
+        /// </summary>
+        /// <param name="archive"></param>
+        /// <param name="entryName"></param>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        public static bool TryFindEntry(this ZipArchive archive, string entryName, out ZipArchiveEntry entry)
         {
             if (entryName.StartsWith("/") || entryName.StartsWith("\\"))
             {
@@ -27,32 +49,24 @@ namespace DG.Epub.Extensions
                 return true;
             }
 
-            var namesToTry = new List<string>
+            HashSet<string> triedNames = new HashSet<string>()
             {
-                "/" + entryName,
-                "\\" + entryName,
-
-                // Manifest href's can be url encoded even though actual filenames are not.
-                Uri.UnescapeDataString(entryName)
+                entryName
             };
+            foreach (var transformation in _entryNameTransformations)
+            {
+                var transformedName = transformation(entryName);
+                if (triedNames.Contains(transformedName))
+                {
+                    continue;
+                }
 
-            foreach (var newName in new[]
-            {
-                    entryName.Replace("\\", "/"),
-                    entryName.Replace("/", "\\")
-                }.Where(newName => newName != entryName))
-            {
-                namesToTry.Add(newName);
-                namesToTry.Add(Uri.UnescapeDataString(newName));
-            }
-
-            foreach (var newName in namesToTry)
-            {
-                entry = archive.GetEntry(newName);
+                entry = archive.GetEntry(transformedName);
                 if (entry != null)
                 {
                     return true;
                 }
+                triedNames.Add(transformedName);
             }
 
             return false;

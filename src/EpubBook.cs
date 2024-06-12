@@ -13,7 +13,7 @@ namespace DG.Epub
             using (ZipArchive zip = new ZipArchive(s, ZipArchiveMode.Read, false, null))
             {
                 ContainerFile file;
-                if (!zip.TryGetEntry(ContainerFile.Path, out var entry))
+                if (!zip.TryFindEntry(ContainerFile.Path, out var entry))
                 {
                     return null;
                 }

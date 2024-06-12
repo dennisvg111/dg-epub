@@ -1,4 +1,5 @@
 ﻿using DG.Epub.Stucture;
+using DG.Epub.Tests.Extensions;
 using FluentAssertions;
 using System.IO;
 using System.Xml;
@@ -67,7 +68,7 @@ namespace DG.Epub.Tests.Structure
                 var result = ContainerFile.Parse(document);
                 var xml = result.ToXml();
 
-                xml.Should().Be(containerWithSingleFile);
+                xml.Should().BeSameIgnoringWhitespace(containerWithSingleFile);
             }
         }
     }

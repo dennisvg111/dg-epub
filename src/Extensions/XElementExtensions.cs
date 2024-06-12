@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Text;
 using System.Xml.Linq;
 
 namespace DG.Epub.Extensions
 {
     public static class XElementExtensions
     {
-        private static readonly XDeclaration _defaultDeclaration = new XDeclaration("1.0", Encoding.UTF8.WebName, null);
+        private static readonly XDeclaration _defaultDeclaration = new XDeclaration("1.0", "UTF-8", null);
 
         public static string ToStringWithDeclaration(this XElement xml, SaveOptions options = SaveOptions.None)
         {
