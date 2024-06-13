@@ -14,15 +14,11 @@ namespace DG.Epub.Extensions
         };
         private static readonly IReadOnlyCollection<Func<string, string>> _entryNameTransformations = new Func<string, string>[]
         {
-            (n) => "/" + n,
-            (n) => "\\" + n,
             (n) => n.Replace("\\", "/"),
             (n) => n.Replace("/", "\\"),
             (n) => "/" + n.Replace("\\", "/"),
             (n) => "\\" + n.Replace("/", "\\"),
             (n) => Uri.UnescapeDataString(n),
-            (n) => Uri.UnescapeDataString("/" + n),
-            (n) => Uri.UnescapeDataString("\\" + n),
             (n) => Uri.UnescapeDataString(n.Replace("\\", "/")),
             (n) => Uri.UnescapeDataString(n.Replace("/", "\\")),
             (n) => Uri.UnescapeDataString("/" + n.Replace("\\", "/")),
