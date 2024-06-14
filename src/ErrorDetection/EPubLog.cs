@@ -1,7 +1,7 @@
 ﻿namespace DG.Epub.ErrorDetection
 {
     /// <summary>
-    /// A resulting warning or error that occured while trying to read an ePub file.
+    /// A log of an event that occured while trying to read an ePub file.
     /// </summary>
     public class EPubLog
     {

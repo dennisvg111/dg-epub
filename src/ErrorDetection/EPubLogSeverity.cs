@@ -1,7 +1,7 @@
 ﻿namespace DG.Epub.ErrorDetection
 {
     /// <summary>
-    /// The severity of an error in an ePub file.
+    /// The severity of an <see cref="EPubLog"/>.
     /// </summary>
     public enum EPubLogSeverity
     {
@@ -21,7 +21,7 @@
         Error = 2,
 
         /// <summary>
-        /// A severe problem with the ePub file itself prevents checking.
+        /// A severe problem with the ePub file itself prevents further checking/reading.
         /// </summary>
         Fatal = 3
     }
