@@ -40,7 +40,7 @@ namespace DG.Epub.ErrorDetection
         public static EPubLogCollection Empty => new EPubLogCollection();
 
         /// <summary>
-        /// Returns a new instance of <see cref="EPubLogCollection"/> containing a single log with <see cref="EPubLogSeverity.Informational"/> and the given <paramref name="message"/>.
+        /// Returns a new instance of <see cref="EPubLogCollection"/> containing a single log with a severity of <see cref="EPubLogSeverity.Informational"/> and the given <paramref name="message"/>.
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
@@ -50,7 +50,7 @@ namespace DG.Epub.ErrorDetection
         }
 
         /// <summary>
-        /// Returns a new instance of <see cref="EPubLogCollection"/> containing a single log with <see cref="EPubLogSeverity.Warning"/> and the given <paramref name="message"/>.
+        /// Returns a new instance of <see cref="EPubLogCollection"/> containing a single log with a severity of <see cref="EPubLogSeverity.Warning"/> and the given <paramref name="message"/>.
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
@@ -60,7 +60,7 @@ namespace DG.Epub.ErrorDetection
         }
 
         /// <summary>
-        /// Returns a new instance of <see cref="EPubLogCollection"/> containing a single log with <see cref="EPubLogSeverity.Error"/> and the given <paramref name="message"/>.
+        /// Returns a new instance of <see cref="EPubLogCollection"/> containing a single log with a severity of <see cref="EPubLogSeverity.Error"/> and the given <paramref name="message"/>.
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
@@ -70,7 +70,7 @@ namespace DG.Epub.ErrorDetection
         }
 
         /// <summary>
-        /// Returns a new instance of <see cref="EPubLogCollection"/> containing a single log with <see cref="EPubLogSeverity.Fatal"/> and the given <paramref name="message"/>.
+        /// Returns a new instance of <see cref="EPubLogCollection"/> containing a single log with a severity of <see cref="EPubLogSeverity.Fatal"/> and the given <paramref name="message"/>.
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
@@ -94,7 +94,7 @@ namespace DG.Epub.ErrorDetection
         }
 
         /// <summary>
-        /// Adds a new log with <see cref="EPubLogSeverity.Informational"/> and the given <paramref name="message"/>.
+        /// Adds a new log with a severity of <see cref="EPubLogSeverity.Informational"/> and the given <paramref name="message"/>.
         /// </summary>
         /// <param name="message"></param>
         public void AddInformational(string message)
@@ -103,7 +103,7 @@ namespace DG.Epub.ErrorDetection
         }
 
         /// <summary>
-        /// Adds a new log with <see cref="EPubLogSeverity.Warning"/> and the given <paramref name="message"/>.
+        /// Adds a new log with a severity of <see cref="EPubLogSeverity.Warning"/> and the given <paramref name="message"/>.
         /// </summary>
         /// <param name="message"></param>
         public void AddWarning(string message)
@@ -112,7 +112,7 @@ namespace DG.Epub.ErrorDetection
         }
 
         /// <summary>
-        /// Adds a new log with <see cref="EPubLogSeverity.Error"/> and the given <paramref name="message"/>.
+        /// Adds a new log with a severity of <see cref="EPubLogSeverity.Error"/> and the given <paramref name="message"/>.
         /// </summary>
         /// <param name="message"></param>
         public void AddError(string message)
@@ -121,7 +121,7 @@ namespace DG.Epub.ErrorDetection
         }
 
         /// <summary>
-        /// Adds a new log with <see cref="EPubLogSeverity.Fatal"/> and the given <paramref name="message"/>.
+        /// Adds a new log with a severity of <see cref="EPubLogSeverity.Fatal"/> and the given <paramref name="message"/>.
         /// </summary>
         /// <param name="message"></param>
         public void AddFatal(string message)
