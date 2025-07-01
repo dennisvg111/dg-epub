@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<ProjectGuid>354dcb2f-5995-4bd9-bb0a-24b3dfdee855</ProjectGuid>
-		<TargetFramework>net452</TargetFramework>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<AssemblyTitle>DG.Epub</AssemblyTitle>
-		<AssemblyVersion>0.0.2</AssemblyVersion>
+		<AssemblyVersion>0.0.3</AssemblyVersion>
 		<Product>DG.Epub</Product>
 		<Copyright>Copyright ©  2024</Copyright>
 		<OutputPath>bin\$(Configuration)\</OutputPath>
@@ -48,11 +48,6 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Dennisvg.DG.Common" Version="1.13.3" />
-	</ItemGroup>
-	<ItemGroup>
-		<Reference Include="System.Data.DataSetExtensions" />
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="System.IO.Compression" />
+		<PackageReference Include="Dennisvg.DG.Common" Version="2.4.0" />
 	</ItemGroup>
 </Project>
