@@ -1,11 +1,17 @@
-﻿using DG.Common.Exceptions;
-using DG.Epub.Extensions;
+﻿using DG.Epub.ErrorDetection;
+using DG.Epub.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace DG.Epub.Stucture
 {
+    [XmlType("container")]
+    [XmlRoot("container")]
     public class ContainerFile
     {
         /// <summary>
@@ -13,46 +19,92 @@ namespace DG.Epub.Stucture
         /// </summary>
         public const string Path = "META-INF/container.xml";
 
-        private readonly static XNamespace _namespace = "urn:oasis:names:tc:opendocument:xmlns:container";
-        private readonly static XName _container = _namespace + "container";
-        private readonly static XName _rootFileCollectionElementName = _namespace + "rootfiles";
-        private readonly static XName _rootFileElementName = _namespace + "rootfile";
+        /// <summary>
+        /// The XML namespace for the container format.
+        /// </summary>
+        public const string XmlNamespace = "urn:oasis:names:tc:opendocument:xmlns:container";
 
-        private readonly List<RootFileInformation> _roots;
+        private const string _rootfileCollectionName = "rootfiles";
+        private static readonly string _rootfileTypeName = XmlHelper.GetXmlTypeName<RootFileInformation>();
 
-        public IReadOnlyList<RootFileInformation> Roots => _roots;
+        [XmlArray(_rootfileCollectionName)]
+        public RootFileInformation[] Roots { get; set; }
 
-        public ContainerFile(List<RootFileInformation> roots)
+        /// <summary>
+        /// The version of the container file format.
+        /// </summary>
+        [XmlAttribute("version")]
+        public string Version { get; set; } = "1.0";
+
+        public ContainerFile(IEnumerable<RootFileInformation> roots)
         {
-            _roots = roots ?? new List<RootFileInformation>();
+            if (roots != null)
+            {
+                Roots = roots.ToArray();
+            }
+            else
+            {
+                Roots = Array.Empty<RootFileInformation>();
+            }
         }
 
-        public static ContainerFile Parse(XDocument xml)
+        // Required for XML serialization, this constructor is not intended for use in code.
+        private ContainerFile()
         {
-            ThrowIf.Parameter.IsNull(xml, nameof(xml));
-            ThrowIf.Parameter.IsNull(xml.Root, nameof(xml.Root));
+            Roots = Array.Empty<RootFileInformation>();
+        }
 
-            var rootFilesCollection = xml.Root?.Element(_rootFileCollectionElementName);
-            var rootFiles = rootFilesCollection?.Elements(_rootFileElementName);
-            List<RootFileInformation> roots = rootFiles.Select(e => new RootFileInformation(e.Attribute(RootFileInformation.XmlFullPathName).Value, e.Attribute(RootFileInformation.XmlMediaTypeName).Value)).ToList();
+        public static EPubParsingResult<ContainerFile> Parse(XDocument xml)
+        {
+            if (xml == null)
+            {
+                return EPubParsingResult<ContainerFile>.Fatal("container.xml should be a valid xml document.");
+            }
+            if (xml.Root == null)
+            {
+                return EPubParsingResult<ContainerFile>.Fatal("container.xml document does not have a root element.");
+            }
 
-            return new ContainerFile(roots);
+            var xmlNamespace = XNamespace.Get(XmlNamespace);
+            var xmlRootFileCollection = xml.Root?.Element(xmlNamespace + _rootfileCollectionName);
+            var xmlRootFiles = xmlRootFileCollection?.Elements(xmlNamespace + _rootfileTypeName);
+
+            if (xmlRootFiles == null || !xmlRootFiles.Any())
+            {
+                return EPubParsingResult<ContainerFile>.Fatal("container.xml should contain at least one rootfile (package document).");
+            }
+
+            var roots = xmlRootFiles.Select(e => new RootFileInformation(e.Attribute(RootFileInformation.XmlFullPathName).Value, e.Attribute(RootFileInformation.XmlMediaTypeName).Value));
+
+            return EPubParsingResult.Success(new ContainerFile(roots));
+        }
+
+        public void WriteTo(XmlWriter xmlWriter)
+        {
+            XmlSerializer xsSubmit = new XmlSerializer(typeof(ContainerFile), XmlNamespace);
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add("", XmlNamespace);
+
+            xsSubmit.Serialize(xmlWriter, this, namespaces);
         }
 
         public string ToXml()
         {
-            var container = new XElement(_container);
-            container.Add(new XAttribute("version", "1.0"));
-            container.Add(new XAttribute("xmlns", _namespace));
+            var stringbuilder = new StringBuilder();
+            stringbuilder.AppendLine(new XDeclaration("1.0", "UTF-8", null).ToString());
 
-            var rootfiles = new XElement(_rootFileCollectionElementName);
-            foreach (var root in _roots)
+            var settings = new XmlWriterSettings
             {
-                rootfiles.Add(new XElement(_rootFileElementName, new XAttribute(RootFileInformation.XmlFullPathName, root.FullPath), new XAttribute(RootFileInformation.XmlMediaTypeName, root.MediaType)));
-            }
+                OmitXmlDeclaration = true,
+                Indent = true,
+                Encoding = Encoding.UTF8
+            };
 
-            container.Add(rootfiles);
-            return container.ToStringWithDeclaration();
+            using (var writer = XmlWriter.Create(stringbuilder, settings))
+            {
+                WriteTo(writer);
+                return stringbuilder.ToString();
+            }
         }
     }
 }

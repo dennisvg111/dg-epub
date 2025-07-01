@@ -26,7 +26,47 @@
         public EPubLog(EPubLogSeverity severity, string message)
         {
             _severity = severity;
-            _message = message;
+            _message = message ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Creates a log entry that is purely meant to be informational.
+        /// </summary>
+        /// <param name="message">The message describing the log event.</param>
+        /// <returns>An <see cref="EPubLog"/> instance representing the informational log entry.</returns>
+        public static EPubLog Informational(string message)
+        {
+            return new EPubLog(EPubLogSeverity.Informational, message);
+        }
+
+        /// <summary>
+        /// Creates a log entry that is meant to warn about possible problems.
+        /// </summary>
+        /// <param name="message">The message describing the log event.</param>
+        /// <returns>An <see cref="EPubLog"/> instance representing the informational log entry.</returns>
+        public static EPubLog Warning(string message)
+        {
+            return new EPubLog(EPubLogSeverity.Warning, message);
+        }
+
+        /// <summary>
+        /// Creates a log entry that represents an error during parsing.
+        /// </summary>
+        /// <param name="message">The message describing the log event.</param>
+        /// <returns>An <see cref="EPubLog"/> instance representing the informational log entry.</returns>
+        public static EPubLog Error(string message)
+        {
+            return new EPubLog(EPubLogSeverity.Error, message);
+        }
+
+        /// <summary>
+        /// Creates a log entry that represents a fatal error that makes further parsing impossible.
+        /// </summary>
+        /// <param name="message">The message describing the log event.</param>
+        /// <returns>An <see cref="EPubLog"/> instance representing the informational log entry.</returns>
+        public static EPubLog Fatal(string message)
+        {
+            return new EPubLog(EPubLogSeverity.Fatal, message);
         }
 
         /// <summary>

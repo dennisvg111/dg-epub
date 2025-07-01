@@ -130,18 +130,18 @@ namespace DG.Epub.ErrorDetection
         }
 
         /// <summary>
-        /// Adds all logs in the given <paramref name="list"/> to the current <see cref="EPubLogCollection"/>.
+        /// Adds all logs in the given <paramref name="logs"/> to the current <see cref="EPubLogCollection"/>.
         /// </summary>
-        /// <param name="list"></param>
-        public void AddAll(IEnumerable<EPubLog> list)
+        /// <param name="logs"></param>
+        public void AddAll(IEnumerable<EPubLog> logs)
         {
-            if (!list.Any())
+            if (!logs.Any())
             {
                 return;
             }
 
-            OverwriteSeverityIfNeeded(list.Max(l => l.Severity));
-            _logs.AddRange(list);
+            OverwriteSeverityIfNeeded(logs.Max(l => l.Severity));
+            _logs.AddRange(logs);
         }
 
         /// <inheritdoc/>
