@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace DG.Epub.Stucture
 {
@@ -36,13 +35,13 @@ namespace DG.Epub.Stucture
         /// The path of this <see cref="RootFileInformation"/>.
         /// </summary>
         [XmlAttribute(XmlFullPathName)]
-        public string FullPath { get; set; }
+        public string? FullPath { get; set; }
 
         /// <summary>
         /// The media type of this <see cref="RootFileInformation"/>.
         /// </summary>
         [XmlAttribute(XmlMediaTypeName)]
-        public string MediaType { get; set; }
+        public string? MediaType { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RootFileInformation"/> class with the specified <paramref name="fullPath"/> and <paramref name="mediaType"/>.
@@ -59,12 +58,10 @@ namespace DG.Epub.Stucture
         private RootFileInformation() { }
 
         #region static instances
-        private static readonly Lazy<RootFileInformation> _default = new Lazy<RootFileInformation>(() => new RootFileInformation(DefaultPath, DefaultMediaType));
-
         /// <summary>
         /// Returns the default instance of <see cref="RootFileInformation"/>, with <see cref="FullPath"/> set to <see cref="DefaultPath"/> and <see cref="MediaType"/> set to <see cref="DefaultMediaType"/>
         /// </summary>
-        public static RootFileInformation Default => _default.Value;
+        public static RootFileInformation Default => new RootFileInformation(DefaultPath, DefaultMediaType);
         #endregion
     }
 }

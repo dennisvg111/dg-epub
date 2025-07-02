@@ -1,0 +1,5 @@
+[*.cs]
+nullable = enable
+dotnet_diagnostic.CS8618.severity = warning
+dotnet_diagnostic.CS8603.severity = warning
+csharp_prefer_simple_using_statement = false:suggestion

@@ -1,4 +1,5 @@
-﻿using DG.Epub.Stucture;
+﻿using DG.Epub.ErrorDetection;
+using DG.Epub.Stucture;
 using FluentAssertions;
 using System.IO;
 using System.Text;
@@ -19,26 +20,46 @@ namespace DG.Epub.Tests.Structure
         }
 
         [Fact]
-        public void TryParse_Correct_ReturnsTrue()
+        public void Parse_Expected_GivesAtMostInformation()
         {
             using (var stream = TextAsStream(MimetypeFile.ExpectedMimetype))
             {
-                var bytes = stream.ToArray();
-                bool canParse = MimetypeFile.TryParse(stream, out MimetypeFile mimetype);
+                var result = MimetypeFile.Parse(stream);
 
-                canParse.Should().BeTrue();
+                result.MaxLogLevel.Should().Match(l => l <= EPubLogLevel.Informational);
             }
         }
 
         [Fact]
-        public void TryParse_BomPrefix_ReturnsFalse()
+        public void Parse_BomPrefix_GivesWarning()
         {
             using (var stream = TextAsStream(MimetypeFile.ExpectedMimetype, new UTF8Encoding(true)))
             {
-                var bytes = stream.ToArray();
-                bool canParse = MimetypeFile.TryParse(stream, out MimetypeFile mimetype);
+                var result = MimetypeFile.Parse(stream);
 
-                canParse.Should().BeFalse();
+                result.MaxLogLevel.Should().Match(l => l >= EPubLogLevel.Warning);
+            }
+        }
+
+        [Fact]
+        public void Parse_ShorterMimetype_GivesError()
+        {
+            using (var stream = TextAsStream("application/zip"))
+            {
+                var result = MimetypeFile.Parse(stream);
+
+                result.MaxLogLevel.Should().Match(l => l >= EPubLogLevel.Error);
+            }
+        }
+
+        [Fact]
+        public void Parse_LongerMimetype_GivesError()
+        {
+            using (var stream = TextAsStream(MimetypeFile.ExpectedMimetype + "+txt"))
+            {
+                var result = MimetypeFile.Parse(stream);
+
+                result.MaxLogLevel.Should().Match(l => l >= EPubLogLevel.Error);
             }
         }
     }

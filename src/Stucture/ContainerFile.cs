@@ -15,17 +15,17 @@ namespace DG.Epub.Stucture
     public class ContainerFile
     {
         /// <summary>
-        /// The path of the container file.
-        /// </summary>
-        public const string Path = "META-INF/container.xml";
-
-        /// <summary>
         /// The XML namespace for the container format.
         /// </summary>
         public const string XmlNamespace = "urn:oasis:names:tc:opendocument:xmlns:container";
 
         private const string _rootfileCollectionName = "rootfiles";
         private static readonly string _rootfileTypeName = XmlHelper.GetXmlTypeName<RootFileInformation>();
+
+        /// <summary>
+        /// Gets the default instance of the <see cref="ContainerFile"/> class.
+        /// </summary>
+        public static ContainerFile Default => new ContainerFile([RootFileInformation.Default]);
 
         [XmlArray(_rootfileCollectionName)]
         public RootFileInformation[] Roots { get; set; }
@@ -54,15 +54,18 @@ namespace DG.Epub.Stucture
             Roots = Array.Empty<RootFileInformation>();
         }
 
-        public static EPubParsingResult<ContainerFile> Parse(XDocument xml)
+        public static EPubParsingResult<ContainerFile> Parse(XDocument? xml, EPubLogLevel minimumLogLevel = EPubLogLevel.Informational)
         {
+            EPubLogCollection logs = new EPubLogCollection(minimumLogLevel);
             if (xml == null)
             {
-                return EPubParsingResult<ContainerFile>.Fatal("container.xml should be a valid xml document.");
+                logs.AddError("container.xml should be a valid XML document.");
+                return EPubParsingResult.Success(new ContainerFile([RootFileInformation.Default]), logs);
             }
             if (xml.Root == null)
             {
-                return EPubParsingResult<ContainerFile>.Fatal("container.xml document does not have a root element.");
+                logs.AddError("container.xml document does not have a root element.");
+                return EPubParsingResult.Success(new ContainerFile([RootFileInformation.Default]), logs);
             }
 
             var xmlNamespace = XNamespace.Get(XmlNamespace);
@@ -71,12 +74,13 @@ namespace DG.Epub.Stucture
 
             if (xmlRootFiles == null || !xmlRootFiles.Any())
             {
-                return EPubParsingResult<ContainerFile>.Fatal("container.xml should contain at least one rootfile (package document).");
+                logs.AddError("container.xml should contain at least one rootfile (package document).");
+                return EPubParsingResult.Success(new ContainerFile([RootFileInformation.Default]), logs);
             }
 
             var roots = xmlRootFiles.Select(e => new RootFileInformation(e.Attribute(RootFileInformation.XmlFullPathName).Value, e.Attribute(RootFileInformation.XmlMediaTypeName).Value));
 
-            return EPubParsingResult.Success(new ContainerFile(roots));
+            return EPubParsingResult.Success(new ContainerFile(roots), logs);
         }
 
         public void WriteTo(XmlWriter xmlWriter)

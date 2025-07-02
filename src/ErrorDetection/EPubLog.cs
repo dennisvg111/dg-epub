@@ -5,13 +5,13 @@
     /// </summary>
     public class EPubLog
     {
-        private readonly EPubLogSeverity _severity;
+        private readonly EPubLogLevel _severity;
         private readonly string _message;
 
         /// <summary>
         /// The severity of this <see cref="EPubLog"/>.
         /// </summary>
-        public EPubLogSeverity Severity => _severity;
+        public EPubLogLevel Severity => _severity;
 
         /// <summary>
         /// The message describing this <see cref="EPubLog"/>.
@@ -23,7 +23,7 @@
         /// </summary>
         /// <param name="severity"></param>
         /// <param name="message"></param>
-        public EPubLog(EPubLogSeverity severity, string message)
+        public EPubLog(EPubLogLevel severity, string message)
         {
             _severity = severity;
             _message = message ?? string.Empty;
@@ -36,7 +36,7 @@
         /// <returns>An <see cref="EPubLog"/> instance representing the informational log entry.</returns>
         public static EPubLog Informational(string message)
         {
-            return new EPubLog(EPubLogSeverity.Informational, message);
+            return new EPubLog(EPubLogLevel.Informational, message);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@
         /// <returns>An <see cref="EPubLog"/> instance representing the informational log entry.</returns>
         public static EPubLog Warning(string message)
         {
-            return new EPubLog(EPubLogSeverity.Warning, message);
+            return new EPubLog(EPubLogLevel.Warning, message);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@
         /// <returns>An <see cref="EPubLog"/> instance representing the informational log entry.</returns>
         public static EPubLog Error(string message)
         {
-            return new EPubLog(EPubLogSeverity.Error, message);
+            return new EPubLog(EPubLogLevel.Error, message);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@
         /// <returns>An <see cref="EPubLog"/> instance representing the informational log entry.</returns>
         public static EPubLog Fatal(string message)
         {
-            return new EPubLog(EPubLogSeverity.Fatal, message);
+            return new EPubLog(EPubLogLevel.Fatal, message);
         }
 
         /// <summary>
