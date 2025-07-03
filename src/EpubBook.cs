@@ -37,7 +37,7 @@ public class EpubBook
     /// <returns>An <see cref="EpubParsingResult{T}"/> containing the parsed <see cref="EpubBook"/> if the operation succeeds, or an error result if the EPUB file is invalid or cannot be parsed.</returns>
     public static EpubParsingResult<EpubBook> FromStream(Stream s, EpubLogLevel minimumLogLevel = EpubLogLevel.Informational)
     {
-        var logs = new EpubLogCollectoin(minimumLogLevel);
+        var logs = new EpubLogCollection(minimumLogLevel);
 
         var book = new EpubBook();
 
@@ -59,7 +59,7 @@ public class EpubBook
         }
     }
 
-    private static bool TryParsePart<T>(EpubParsingResult<T> result, EpubLogCollectoin logs, out T? value)
+    private static bool TryParsePart<T>(EpubParsingResult<T> result, EpubLogCollection logs, out T? value)
     {
         return result.AndCopyLogsTo(logs).TryGetValue(out value);
     }

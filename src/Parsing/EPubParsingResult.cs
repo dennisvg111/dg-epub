@@ -8,7 +8,7 @@ namespace DG.Epub.Parsing;
 /// </summary>
 public class EpubParsingResult<T>
 {
-    private readonly EpubLogCollectoin _logs;
+    private readonly EpubLogCollection _logs;
     private readonly T? _value;
 
     /// <summary>
@@ -36,9 +36,9 @@ public class EpubParsingResult<T>
     /// </summary>
     /// <param name="value">The parsed EPUB object.</param>
     /// <param name="logs">The collection of logs generated during the parsing process. If <see langword="null"/>, an empty log collection will be used.</param>
-    public EpubParsingResult(T? value, EpubLogCollectoin? logs)
+    public EpubParsingResult(T? value, EpubLogCollection? logs)
     {
-        _logs = logs ?? new EpubLogCollectoin();
+        _logs = logs ?? new EpubLogCollection();
         _value = value;
     }
 
@@ -57,7 +57,7 @@ public class EpubParsingResult<T>
     /// </summary>
     /// <param name="logCollection">The target collection to which logs will be copied. Cannot be null.</param>
     /// <returns>The current <see cref="EpubParsingResult{T}"/> instance, allowing for method chaining.</returns>
-    public EpubParsingResult<T> AndCopyLogsTo(EpubLogCollectoin logCollection)
+    public EpubParsingResult<T> AndCopyLogsTo(EpubLogCollection logCollection)
     {
         logCollection.AddAll(_logs);
         return this;
@@ -88,7 +88,7 @@ public static class EPubParsingResult
     /// <param name="value">The parsed EPUB object.</param>
     /// <param name="logs">The collection of logs generated during the parsing process. If <see langword="null"/>, an empty log collection will be used.</param>
     /// <returns>An <see cref="EpubParsingResult{T}"/> instance representing a completed parsing result.</returns>
-    public static EpubParsingResult<T> Completed<T>(T value, EpubLogCollectoin logs)
+    public static EpubParsingResult<T> Completed<T>(T value, EpubLogCollection logs)
     {
         return new EpubParsingResult<T>(value, logs);
     }
@@ -98,7 +98,7 @@ public static class EPubParsingResult
     /// </summary>
     /// <param name="logs"></param>
     /// <returns>An <see cref="EpubParsingResult{T}"/> instance representing a fatal parsing error, with no parsed value and the provided <paramref name="logs"/>.</returns>
-    public static EpubParsingResult<T> FatalFor<T>(EpubLogCollectoin logs)
+    public static EpubParsingResult<T> FatalFor<T>(EpubLogCollection logs)
     {
         return new EpubParsingResult<T>(default, logs);
     }
@@ -111,6 +111,6 @@ public static class EPubParsingResult
     /// <returns>An <see cref="EpubParsingResult{T}"/> instance representing a fatal parsing error, with no parsed value and the provided error message.</returns>
     public static EpubParsingResult<T> FatalFor<T>(string message, EpubLogLevel minimumLogLevel = EpubLogLevel.Informational)
     {
-        return new EpubParsingResult<T>(default, new EpubLogCollectoin(EpubLog.Fatal(message), minimumLogLevel));
+        return new EpubParsingResult<T>(default, new EpubLogCollection(EpubLog.Fatal(message), minimumLogLevel));
     }
 }

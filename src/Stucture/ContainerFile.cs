@@ -57,7 +57,7 @@ namespace DG.Epub.Stucture
 
         public static EpubParsingResult<ContainerFile> Parse(XDocument? xml, EpubLogLevel minimumLogLevel = EpubLogLevel.Informational)
         {
-            EpubLogCollectoin logs = new EpubLogCollectoin(minimumLogLevel);
+            EpubLogCollection logs = new EpubLogCollection(minimumLogLevel);
             if (xml == null)
             {
                 logs.AddError("container.xml should be a valid XML document.");

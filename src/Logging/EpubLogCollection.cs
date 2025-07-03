@@ -7,45 +7,45 @@ namespace DG.Epub.Logging;
 /// <summary>
 /// A collection of errors that occured during the reading of an EPUB file.
 /// </summary>
-public class EpubLogCollectoin : IEnumerable<EpubLog>
+public class EpubLogCollection : IEnumerable<EpubLog>
 {
     private readonly EpubLogLevel _minimumLogLevel;
     private readonly List<EpubLog> _logs;
     private EpubLogLevel _highestSeverity = EpubLogLevel.Debug;
 
     /// <summary>
-    /// Indicates the hightest <see cref="EpubLogLevel"/> of any <see cref="EpubLog"/> that has been added to this <see cref="EpubLogCollectoin"/>.
+    /// Indicates the hightest <see cref="EpubLogLevel"/> of any <see cref="EpubLog"/> that has been added to this <see cref="EpubLogCollection"/>.
     /// </summary>
     public EpubLogLevel HighestSeverity => _highestSeverity;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="EpubLogCollectoin"/> without any logs.
+    /// Initializes a new instance of <see cref="EpubLogCollection"/> without any logs.
     /// </summary>
     /// <param name="miminumLogLevel"></param>
-    public EpubLogCollectoin(EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
+    public EpubLogCollection(EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
     {
         _logs = new List<EpubLog>();
         _minimumLogLevel = miminumLogLevel;
     }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="EpubLogCollectoin"/> with the given <paramref name="log"/>.
+    /// Initializes a new instance of <see cref="EpubLogCollection"/> with the given <paramref name="log"/>.
     /// </summary>
     /// <param name="log"></param>
     /// <param name="miminumLogLevel"></param>
-    public EpubLogCollectoin(EpubLog log, EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
+    public EpubLogCollection(EpubLog log, EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
         : this(miminumLogLevel)
     {
         AddLog(log);
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EpubLogCollectoin"/> class with the given <paramref name="logs"/>.
+    /// Initializes a new instance of the <see cref="EpubLogCollection"/> class with the given <paramref name="logs"/>.
     /// </summary>
     /// <remarks>Logs in the <paramref name="logs"/> collection that do not meet the specified minimum log level will not be included in the new collection.</remarks>
     /// <param name="logs">A collection of <see cref="EpubLog"/> instances to be added to the log collection.</param>
     /// <param name="miminumLogLevel">The minimum log level to filter logs. Logs below this level will be ignored. Defaults to <see cref="EpubLogLevel.Informational"/>.</param>
-    public EpubLogCollectoin(IEnumerable<EpubLog> logs, EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
+    public EpubLogCollection(IEnumerable<EpubLog> logs, EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
         : this(miminumLogLevel)
     {
         AddAll(logs);
@@ -114,7 +114,7 @@ public class EpubLogCollectoin : IEnumerable<EpubLog>
     }
 
     /// <summary>
-    /// Adds all of the given <paramref name="logs"/> to the current <see cref="EpubLogCollectoin"/>.
+    /// Adds all of the given <paramref name="logs"/> to the current <see cref="EpubLogCollection"/>.
     /// </summary>
     /// <param name="logs"></param>
     public void AddAll(IEnumerable<EpubLog> logs)

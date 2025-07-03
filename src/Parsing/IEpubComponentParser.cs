@@ -20,7 +20,7 @@ public interface IEpubComponentParser<TComponent>
     /// <para>Note that this can still be <see langword="null"/> even if the return value of this function is <see langword="true"/> if the component was not found but is optional.</para>
     /// </param>
     /// <returns><see langword="true"/> if parsing of this EPUB file can continue; otherwise, <see langword="false"/>.</returns>
-    bool TryParse(ZipArchive zip, EpubLogCollectoin logs, out TComponent? data);
+    bool TryParse(ZipArchive zip, EpubLogCollection logs, out TComponent? data);
 
     /// <summary>
     /// Adds the specified parsed data to the given EPUB book.

@@ -16,9 +16,9 @@ internal class EpubComponentParserAdapter<TComponent> : IEpubParsingPipelineStep
     public string ParserName => $"{parser.GetType().Name}[{typeof(TComponent).Name}]";
 
     /// <inheritdoc/>
-    public bool TryAddDataToBook(EpubBook book, ZipArchive zip, EpubLogLevel minimumLogLevel, out EpubLogCollectoin logs)
+    public bool TryAddDataToBook(EpubBook book, ZipArchive zip, EpubLogLevel minimumLogLevel, out EpubLogCollection logs)
     {
-        logs = new EpubLogCollectoin(minimumLogLevel);
+        logs = new EpubLogCollection(minimumLogLevel);
         if (!parser.TryParse(zip, logs, out TComponent? data))
         {
             if (logs.HighestSeverity < EpubLogLevel.Fatal)

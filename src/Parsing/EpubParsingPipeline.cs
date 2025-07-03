@@ -38,7 +38,7 @@ public class EpubParsingPipeline
     /// <returns>An <see cref="EpubParsingResult{EpubBook}"/> containing the parsed <see cref="EpubBook"/> and a collection of logs generated during the parsing process.</returns>
     public EpubParsingResult<EpubBook> Parse(Stream s, EpubLogLevel minimumLogLevel = EpubLogLevel.Informational)
     {
-        var logs = new EpubLogCollectoin(minimumLogLevel);
+        var logs = new EpubLogCollection(minimumLogLevel);
         logs.AddDebug($"Starting EPUB parsing pipeline using {_parsers.Count} parsers.");
 
         var book = new EpubBook();
@@ -49,7 +49,7 @@ public class EpubParsingPipeline
             {
                 logs.AddDebug($"Running parser {parser.ParserName}.");
 
-                var isParseSuccess = parser.TryAddDataToBook(book, zip, minimumLogLevel, out EpubLogCollectoin stepLogs);
+                var isParseSuccess = parser.TryAddDataToBook(book, zip, minimumLogLevel, out EpubLogCollection stepLogs);
 
                 logs.AddAll(stepLogs);
 

@@ -23,5 +23,5 @@ internal interface IEpubParsingPipelineStep
     /// <param name="minimumLogLevel">The minimum log level for logs.</param>
     /// <param name="logs">The logs produced by this parsing step.</param>
     /// <returns><see langword="true"/> if parsing did not result in a fatal error; otherwise, <see langword="false"/>.</returns>
-    bool TryAddDataToBook(EpubBook book, ZipArchive zip, EpubLogLevel minimumLogLevel, out EpubLogCollectoin logs);
+    bool TryAddDataToBook(EpubBook book, ZipArchive zip, EpubLogLevel minimumLogLevel, out EpubLogCollection logs);
 }

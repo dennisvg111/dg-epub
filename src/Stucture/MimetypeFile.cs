@@ -49,7 +49,7 @@ namespace DG.Epub.Stucture
         /// <returns>An <see cref="EpubParsingResult{MimetypeFile}"/> containing the parsed <see cref="MimetypeFile"/> object and any associated logs.</returns>
         public static EpubParsingResult<MimetypeFile> Parse(Stream stream, EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
         {
-            EpubLogCollectoin logs = new EpubLogCollectoin(miminumLogLevel);
+            EpubLogCollection logs = new EpubLogCollection(miminumLogLevel);
             using (StreamReader reader = new StreamReader(stream, _encoding))
             {
                 char[] chars = new char[_expectedContentLength];
