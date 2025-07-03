@@ -1,5 +1,6 @@
-﻿using DG.Epub.ErrorDetection;
-using DG.Epub.Helpers;
+﻿using DG.Epub.Helpers;
+using DG.Epub.Logging;
+using DG.Epub.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,18 +55,18 @@ namespace DG.Epub.Stucture
             Roots = Array.Empty<RootFileInformation>();
         }
 
-        public static EPubParsingResult<ContainerFile> Parse(XDocument? xml, EPubLogLevel minimumLogLevel = EPubLogLevel.Informational)
+        public static EpubParsingResult<ContainerFile> Parse(XDocument? xml, EpubLogLevel minimumLogLevel = EpubLogLevel.Informational)
         {
-            EPubLogCollection logs = new EPubLogCollection(minimumLogLevel);
+            EpubLogCollectoin logs = new EpubLogCollectoin(minimumLogLevel);
             if (xml == null)
             {
                 logs.AddError("container.xml should be a valid XML document.");
-                return EPubParsingResult.Success(new ContainerFile([RootFileInformation.Default]), logs);
+                return EPubParsingResult.Completed(new ContainerFile([RootFileInformation.Default]), logs);
             }
             if (xml.Root == null)
             {
                 logs.AddError("container.xml document does not have a root element.");
-                return EPubParsingResult.Success(new ContainerFile([RootFileInformation.Default]), logs);
+                return EPubParsingResult.Completed(new ContainerFile([RootFileInformation.Default]), logs);
             }
 
             var xmlNamespace = XNamespace.Get(XmlNamespace);
@@ -75,12 +76,12 @@ namespace DG.Epub.Stucture
             if (xmlRootFiles == null || !xmlRootFiles.Any())
             {
                 logs.AddError("container.xml should contain at least one rootfile (package document).");
-                return EPubParsingResult.Success(new ContainerFile([RootFileInformation.Default]), logs);
+                return EPubParsingResult.Completed(new ContainerFile([RootFileInformation.Default]), logs);
             }
 
             var roots = xmlRootFiles.Select(e => new RootFileInformation(e.Attribute(RootFileInformation.XmlFullPathName).Value, e.Attribute(RootFileInformation.XmlMediaTypeName).Value));
 
-            return EPubParsingResult.Success(new ContainerFile(roots), logs);
+            return EPubParsingResult.Completed(new ContainerFile(roots), logs);
         }
 
         public void WriteTo(XmlWriter xmlWriter)

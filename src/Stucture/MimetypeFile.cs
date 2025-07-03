@@ -1,5 +1,6 @@
-﻿using DG.Epub.ErrorDetection;
-using DG.Epub.Extensions;
+﻿using DG.Epub.Extensions;
+using DG.Epub.Logging;
+using DG.Epub.Parsing;
 using System;
 using System.IO;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Text;
 namespace DG.Epub.Stucture
 {
     /// <summary>
-    /// Represents the MIME type file in an ePub container, providing functionality to parse, validate, and access its content.
+    /// Represents the MIME type file in an EPUB container, providing functionality to parse, validate, and access its content.
     /// </summary>
     public class MimetypeFile
     {
@@ -21,7 +22,7 @@ namespace DG.Epub.Stucture
         private readonly string _mimetype;
 
         /// <summary>
-        /// Gets the MIME type defined in this ePub.
+        /// Gets the MIME type defined in this EPUB.
         /// </summary>
         public string Mimetype => _mimetype;
 
@@ -40,15 +41,15 @@ namespace DG.Epub.Stucture
         }
 
         /// <summary>
-        /// Parses the provided stream to extract and validate the mimetype file content.
+        /// Parses the provided <paramref name="stream"/> to extract and validate the mimetype file content.
         /// </summary>
         /// <remarks>The method reads the mimetype file from the provided stream, validates its content and encoding, and logs any warnings or errors encountered during parsing.</remarks>
         /// <param name="stream">The input stream containing the mimetype file data. The stream must be readable and positioned at the start of the mimetype file.</param>
-        /// <param name="miminumLogLevel">The minimum log level for capturing parsing logs. Defaults to <see cref="EPubLogLevel.Informational"/>.</param>
-        /// <returns>An <see cref="EPubParsingResult{MimetypeFile}"/> containing the parsed <see cref="MimetypeFile"/> object and any associated logs.</returns>
-        public static EPubParsingResult<MimetypeFile> Parse(Stream stream, EPubLogLevel miminumLogLevel = EPubLogLevel.Informational)
+        /// <param name="miminumLogLevel">The minimum log level for capturing parsing logs. Defaults to <see cref="EpubLogLevel.Informational"/>.</param>
+        /// <returns>An <see cref="EpubParsingResult{MimetypeFile}"/> containing the parsed <see cref="MimetypeFile"/> object and any associated logs.</returns>
+        public static EpubParsingResult<MimetypeFile> Parse(Stream stream, EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
         {
-            EPubLogCollection logs = new EPubLogCollection(miminumLogLevel);
+            EpubLogCollectoin logs = new EpubLogCollectoin(miminumLogLevel);
             using (StreamReader reader = new StreamReader(stream, _encoding))
             {
                 char[] chars = new char[_expectedContentLength];
@@ -73,7 +74,7 @@ namespace DG.Epub.Stucture
                 {
                     logs.AddError($"The mimetype file contains invalid content: '{content}'.");
                 }
-                return new EPubParsingResult<MimetypeFile>(mimetype, logs);
+                return new EpubParsingResult<MimetypeFile>(mimetype, logs);
             }
         }
 

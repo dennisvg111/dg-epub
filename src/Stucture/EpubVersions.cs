@@ -1,7 +1,7 @@
 ﻿namespace DG.Epub.Stucture
 {
     /// <summary>
-    /// Describes the version of an ePub file.
+    /// Describes the version of an EPUB file.
     /// </summary>
     public enum EpubVersions
     {

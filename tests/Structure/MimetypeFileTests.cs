@@ -1,4 +1,4 @@
-﻿using DG.Epub.ErrorDetection;
+﻿using DG.Epub.Logging;
 using DG.Epub.Stucture;
 using FluentAssertions;
 using System.IO;
@@ -26,7 +26,7 @@ namespace DG.Epub.Tests.Structure
             {
                 var result = MimetypeFile.Parse(stream);
 
-                result.MaxLogLevel.Should().Match(l => l <= EPubLogLevel.Informational);
+                result.MaxLogLevel.Should().Match(l => l <= EpubLogLevel.Informational);
             }
         }
 
@@ -37,7 +37,7 @@ namespace DG.Epub.Tests.Structure
             {
                 var result = MimetypeFile.Parse(stream);
 
-                result.MaxLogLevel.Should().Match(l => l >= EPubLogLevel.Warning);
+                result.MaxLogLevel.Should().Match(l => l >= EpubLogLevel.Warning);
             }
         }
 
@@ -48,7 +48,7 @@ namespace DG.Epub.Tests.Structure
             {
                 var result = MimetypeFile.Parse(stream);
 
-                result.MaxLogLevel.Should().Match(l => l >= EPubLogLevel.Error);
+                result.MaxLogLevel.Should().Match(l => l >= EpubLogLevel.Error);
             }
         }
 
@@ -59,7 +59,7 @@ namespace DG.Epub.Tests.Structure
             {
                 var result = MimetypeFile.Parse(stream);
 
-                result.MaxLogLevel.Should().Match(l => l >= EPubLogLevel.Error);
+                result.MaxLogLevel.Should().Match(l => l >= EpubLogLevel.Error);
             }
         }
     }
