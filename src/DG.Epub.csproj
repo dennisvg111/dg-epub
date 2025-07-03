@@ -56,7 +56,4 @@
 	<ItemGroup>
 	  <EditorConfigFiles Remove="C:\Users\d.vangils\source\repos\dennisvg111\dg-epub\src\.editorconfig" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Parsing\Standard\" />
-	</ItemGroup>
 </Project>

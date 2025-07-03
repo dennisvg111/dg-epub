@@ -8,9 +8,14 @@ namespace DG.Epub.Stucture
     /// <remarks>
     /// A default instance of this class can be obtained via the <see cref="Default"/> property.
     /// </remarks>
-    [XmlType("rootfile")]
+    [XmlType(XmlTypeName)]
     public class RootFileInformation
     {
+        /// <summary>
+        /// Represents the XML type name for the root file element.
+        /// </summary>
+        public const string XmlTypeName = "rootfile";
+
         /// <summary>
         /// The name of the xml attribute that indicates the path of this root file.
         /// </summary>
@@ -30,6 +35,11 @@ namespace DG.Epub.Stucture
         /// application/oebps-package+xml
         /// </summary>
         public const string DefaultMediaType = "application/oebps-package+xml";
+
+        /// <summary>
+        /// Returns the default instance of <see cref="RootFileInformation"/>, with <see cref="FullPath"/> set to <see cref="DefaultPath"/> and <see cref="MediaType"/> set to <see cref="DefaultMediaType"/>
+        /// </summary>
+        public static RootFileInformation Default => new RootFileInformation(DefaultPath, DefaultMediaType);
 
         /// <summary>
         /// The path of this <see cref="RootFileInformation"/>.
@@ -56,12 +66,5 @@ namespace DG.Epub.Stucture
 
         // Required for XML serialization, this constructor is not intended for use in code.
         private RootFileInformation() { }
-
-        #region static instances
-        /// <summary>
-        /// Returns the default instance of <see cref="RootFileInformation"/>, with <see cref="FullPath"/> set to <see cref="DefaultPath"/> and <see cref="MediaType"/> set to <see cref="DefaultMediaType"/>
-        /// </summary>
-        public static RootFileInformation Default => new RootFileInformation(DefaultPath, DefaultMediaType);
-        #endregion
     }
 }

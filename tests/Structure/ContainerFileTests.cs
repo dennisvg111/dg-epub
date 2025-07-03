@@ -1,4 +1,6 @@
-﻿using DG.Epub.Stucture;
+﻿using DG.Epub.Logging;
+using DG.Epub.Parsing.Standard;
+using DG.Epub.Stucture;
 using DG.Epub.Tests.Extensions;
 using FluentAssertions;
 using System.IO;
@@ -21,8 +23,10 @@ namespace DG.Epub.Tests.Structure
             using (XmlReader xmlReader = XmlReader.Create(reader, new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore }))
             {
                 var document = XDocument.Load(xmlReader);
+                var parser = new ContainerParser();
+                var log = new EpubLogCollection();
 
-                var result = ContainerFile.Parse(document).Value;
+                parser.TryParse(document, log, out ContainerFile result);
 
                 result.Roots.Should().ContainSingle();
                 result.Roots[0].FullPath.Should().Be("OEBPS/content.opf");
@@ -36,8 +40,10 @@ namespace DG.Epub.Tests.Structure
             using (XmlReader xmlReader = XmlReader.Create(reader, new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore }))
             {
                 var document = XDocument.Load(xmlReader);
+                var parser = new ContainerParser();
+                var log = new EpubLogCollection();
 
-                var result = ContainerFile.Parse(document).Value;
+                parser.TryParse(document, log, out ContainerFile result);
 
                 result.Roots.Should().ContainSingle();
                 result.Roots[0].MediaType.Should().Be("application/oebps-package+xml");
@@ -51,8 +57,10 @@ namespace DG.Epub.Tests.Structure
             using (XmlReader xmlReader = XmlReader.Create(reader, new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore }))
             {
                 var document = XDocument.Load(xmlReader);
+                var parser = new ContainerParser();
+                var log = new EpubLogCollection();
 
-                var result = ContainerFile.Parse(document).Value;
+                parser.TryParse(document, log, out ContainerFile result);
 
                 result.Roots.Should().HaveCount(2);
             }
@@ -65,8 +73,10 @@ namespace DG.Epub.Tests.Structure
             using (XmlReader xmlReader = XmlReader.Create(reader, new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore }))
             {
                 var document = XDocument.Load(xmlReader);
+                var parser = new ContainerParser();
+                var log = new EpubLogCollection();
 
-                var result = ContainerFile.Parse(document).Value;
+                parser.TryParse(document, log, out ContainerFile result);
                 var xml = result.ToXml();
 
                 xml.Should().BeSameIgnoringWhitespace(containerWithSingleFile);
@@ -76,6 +86,9 @@ namespace DG.Epub.Tests.Structure
         [Fact]
         public void WriteTo_CanBeParsed()
         {
+            var parser = new ContainerParser();
+            var log = new EpubLogCollection();
+
             var containerFile = new ContainerFile(new[]
             {
                 new RootFileInformation("Test/content.opf", "application.test")
@@ -88,7 +101,7 @@ namespace DG.Epub.Tests.Structure
 
                 var xml = sb.ToString();
 
-                var containerFile2 = ContainerFile.Parse(XDocument.Parse(xml)).Value;
+                parser.TryParse(XDocument.Parse(xml), log, out ContainerFile containerFile2);
 
                 containerFile2.Should().BeEquivalentTo(containerFile);
             }

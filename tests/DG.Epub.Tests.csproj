@@ -36,4 +36,7 @@
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="System.IO.Compression" />
+	</ItemGroup>
 </Project>

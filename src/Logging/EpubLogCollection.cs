@@ -7,16 +7,17 @@ namespace DG.Epub.Logging;
 /// <summary>
 /// A collection of errors that occured during the reading of an EPUB file.
 /// </summary>
-public class EpubLogCollection : IEnumerable<EpubLog>
+public class EpubLogCollection : IReadOnlyEpubLogCollection, IEpubLogWriter
 {
     private readonly EpubLogLevel _minimumLogLevel;
     private readonly List<EpubLog> _logs;
     private EpubLogLevel _highestSeverity = EpubLogLevel.Debug;
 
-    /// <summary>
-    /// Indicates the hightest <see cref="EpubLogLevel"/> of any <see cref="EpubLog"/> that has been added to this <see cref="EpubLogCollection"/>.
-    /// </summary>
+    /// <inheritdoc/>
     public EpubLogLevel HighestSeverity => _highestSeverity;
+
+    /// <inheritdoc/>
+    public bool ContainsFatalError => HighestSeverity >= EpubLogLevel.Fatal; // use greater than or equals so future levels above fatal are also included.
 
     /// <summary>
     /// Initializes a new instance of <see cref="EpubLogCollection"/> without any logs.
@@ -36,7 +37,7 @@ public class EpubLogCollection : IEnumerable<EpubLog>
     public EpubLogCollection(EpubLog log, EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
         : this(miminumLogLevel)
     {
-        AddLog(log);
+        Add(log);
     }
 
     /// <summary>
@@ -59,7 +60,8 @@ public class EpubLogCollection : IEnumerable<EpubLog>
         }
     }
 
-    private void AddLog(EpubLog log)
+    /// <inheritdoc/>
+    public void Add(EpubLog log)
     {
         if (log.Severity < _minimumLogLevel)
             return;
@@ -68,55 +70,7 @@ public class EpubLogCollection : IEnumerable<EpubLog>
         _logs.Add(log);
     }
 
-    /// <summary>
-    /// Adds a new log with a severity of <see cref="EpubLogLevel.Debug"/> and the given <paramref name="message"/>.
-    /// </summary>
-    /// <param name="message"></param>
-    public void AddDebug(string message)
-    {
-        AddLog(new EpubLog(EpubLogLevel.Debug, message));
-    }
-
-    /// <summary>
-    /// Adds a new log with a severity of <see cref="EpubLogLevel.Informational"/> and the given <paramref name="message"/>.
-    /// </summary>
-    /// <param name="message"></param>
-    public void AddInformational(string message)
-    {
-        AddLog(new EpubLog(EpubLogLevel.Informational, message));
-    }
-
-    /// <summary>
-    /// Adds a new log with a severity of <see cref="EpubLogLevel.Warning"/> and the given <paramref name="message"/>.
-    /// </summary>
-    /// <param name="message"></param>
-    public void AddWarning(string message)
-    {
-        AddLog(new EpubLog(EpubLogLevel.Warning, message));
-    }
-
-    /// <summary>
-    /// Adds a new log with a severity of <see cref="EpubLogLevel.Error"/> and the given <paramref name="message"/>.
-    /// </summary>
-    /// <param name="message"></param>
-    public void AddError(string message)
-    {
-        AddLog(new EpubLog(EpubLogLevel.Error, message));
-    }
-
-    /// <summary>
-    /// Adds a new log with a severity of <see cref="EpubLogLevel.Fatal"/> and the given <paramref name="message"/>.
-    /// </summary>
-    /// <param name="message"></param>
-    public void AddFatal(string message)
-    {
-        AddLog(new EpubLog(EpubLogLevel.Fatal, message));
-    }
-
-    /// <summary>
-    /// Adds all of the given <paramref name="logs"/> to the current <see cref="EpubLogCollection"/>.
-    /// </summary>
-    /// <param name="logs"></param>
+    /// <inheritdoc/>
     public void AddAll(IEnumerable<EpubLog> logs)
     {
         logs = logs.Where(l => l.Severity >= _minimumLogLevel);
@@ -127,6 +81,36 @@ public class EpubLogCollection : IEnumerable<EpubLog>
 
         OverwriteSeverityIfNeeded(logs.Max(l => l.Severity));
         _logs.AddRange(logs);
+    }
+
+    /// <inheritdoc/>
+    public void AddDebug(string message)
+    {
+        Add(new EpubLog(EpubLogLevel.Debug, message));
+    }
+
+    /// <inheritdoc/>
+    public void AddInformational(string message)
+    {
+        Add(new EpubLog(EpubLogLevel.Informational, message));
+    }
+
+    /// <inheritdoc/>
+    public void AddWarning(string message)
+    {
+        Add(new EpubLog(EpubLogLevel.Warning, message));
+    }
+
+    /// <inheritdoc/>
+    public void AddError(string message)
+    {
+        Add(new EpubLog(EpubLogLevel.Error, message));
+    }
+
+    /// <inheritdoc/>
+    public void AddFatal(string message)
+    {
+        Add(new EpubLog(EpubLogLevel.Fatal, message));
     }
 
     /// <inheritdoc/>

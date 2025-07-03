@@ -1,6 +1,5 @@
 ﻿using DG.Epub.Extensions;
 using DG.Epub.Logging;
-using DG.Epub.Parsing;
 using System;
 using System.IO;
 using System.Text;
@@ -16,8 +15,8 @@ namespace DG.Epub.Stucture
         /// The expected content of the mimetype file.
         /// </summary>
         public const string ExpectedMimetype = "application/epub+zip";
-        private const int _expectedContentLength = 20;
-        private readonly static Encoding _encoding = new UTF8Encoding(false);
+        private static readonly int _expectedContentLength = ExpectedMimetype.Length;
+        private static readonly Encoding _expectedEncoding = new UTF8Encoding(false);
 
         private readonly string _mimetype;
 
@@ -41,40 +40,43 @@ namespace DG.Epub.Stucture
         }
 
         /// <summary>
-        /// Parses the provided <paramref name="stream"/> to extract and validate the mimetype file content.
+        /// Attempts to parse the content of a stream as a mimetype file.
         /// </summary>
-        /// <remarks>The method reads the mimetype file from the provided stream, validates its content and encoding, and logs any warnings or errors encountered during parsing.</remarks>
-        /// <param name="stream">The input stream containing the mimetype file data. The stream must be readable and positioned at the start of the mimetype file.</param>
-        /// <param name="miminumLogLevel">The minimum log level for capturing parsing logs. Defaults to <see cref="EpubLogLevel.Informational"/>.</param>
-        /// <returns>An <see cref="EpubParsingResult{MimetypeFile}"/> containing the parsed <see cref="MimetypeFile"/> object and any associated logs.</returns>
-        public static EpubParsingResult<MimetypeFile> Parse(Stream stream, EpubLogLevel miminumLogLevel = EpubLogLevel.Informational)
+        /// <remarks>
+        /// This method reads the stream and validates it. If the content is invalid, errors are logged via the given <paramref name="logWriter"/>.
+        /// </remarks>
+        /// <param name="stream">The input stream containing the mimetype file data. The stream must be readable and positioned at the start of the file.</param>
+        /// <param name="logWriter">An instance of <see cref="IEpubLogWriter"/> used to log errors and warnings encountered during parsing.</param>
+        /// <param name="mimetypeFile">When this method returns, contains the parsed <see cref="MimetypeFile"/> object if parsing succeeds, or an invalid <see cref="MimetypeFile"/> object if parsing fails.</param>
+        /// <returns><see langword="true"/> if the parsing operation completes successfully; otherwise, <see langword="false"/>.</returns>
+        public static bool TryParse(Stream stream, IEpubLogWriter logWriter, out MimetypeFile mimetypeFile)
         {
-            EpubLogCollection logs = new EpubLogCollection(miminumLogLevel);
-            using (StreamReader reader = new StreamReader(stream, _encoding))
+            using (StreamReader reader = new StreamReader(stream, _expectedEncoding))
             {
                 char[] chars = new char[_expectedContentLength];
                 int read = reader.ReadBlock(chars, 0, _expectedContentLength);
 
                 if (read != _expectedContentLength)
                 {
-                    logs.AddError($"Expected {_expectedContentLength} characters in the mimetype file, but only found {read}.");
+                    logWriter.AddError($"Expected {_expectedContentLength} characters in the mimetype file, but only found {read}.");
                 }
                 if (!reader.EndOfStream)
                 {
-                    logs.AddError($"Expected {_expectedContentLength} characters in the mimetype file, but found more.");
+                    logWriter.AddError($"Expected {_expectedContentLength} characters in the mimetype file, but found more.");
                 }
-                if (!Equals(reader.CurrentEncoding, _encoding))
+                if (!Equals(reader.CurrentEncoding, _expectedEncoding))
                 {
-                    logs.AddWarning($"Expected mimetype file to have encoding '{_encoding.ToReadableString()}', but detected encoding was '{reader.CurrentEncoding.ToReadableString()}'.");
+                    logWriter.AddWarning($"Expected mimetype file to have encoding '{_expectedEncoding.ToReadableString()}', but detected encoding was '{reader.CurrentEncoding.ToReadableString()}'.");
                 }
                 string content = new string(chars).Substring(0, read);
-                var mimetype = new MimetypeFile(content);
+                mimetypeFile = new MimetypeFile(content);
 
-                if (!mimetype.IsValid)
+                if (!mimetypeFile.IsValid)
                 {
-                    logs.AddError($"The mimetype file contains invalid content: '{content}'.");
+                    logWriter.AddError($"The mimetype file contains invalid content: '{content}'. Expected content is '{ExpectedMimetype}'");
                 }
-                return new EpubParsingResult<MimetypeFile>(mimetype, logs);
+
+                return true;
             }
         }
 

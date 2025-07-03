@@ -6,7 +6,7 @@ namespace DG.Epub.Parsing;
 /// <summary>
 /// Defines methods for interacting with an EPUB parser, providing methods to retrieve parser information and process EPUB data.
 /// </summary>
-internal interface IEpubParsingPipelineStep
+public interface IEpubParsingPipelineStep
 {
     /// <summary>
     /// Retrieves the name of the underlying parser.
@@ -20,8 +20,7 @@ internal interface IEpubParsingPipelineStep
     /// <remarks>If the parsing operation returned a result with fatal errors, this function will return <see langword="false"/> and <paramref name="book"/> should not be changed.</remarks>
     /// <param name="book">The <see cref="EpubBook"/> instance to which data will be added. Cannot be null.</param>
     /// <param name="zip">The <see cref="ZipArchive"/> containing the data to be added to the book. Cannot be null.</param>
-    /// <param name="minimumLogLevel">The minimum log level for logs.</param>
-    /// <param name="logs">The logs produced by this parsing step.</param>
+    /// <param name="logWriter">The <see cref="IEpubLogWriter"/> instance used to record logs during the parsing process. Cannot be null.</param>
     /// <returns><see langword="true"/> if parsing did not result in a fatal error; otherwise, <see langword="false"/>.</returns>
-    bool TryAddDataToBook(EpubBook book, ZipArchive zip, EpubLogLevel minimumLogLevel, out EpubLogCollection logs);
+    bool TryAddDataToBook(EpubBook book, ZipArchive zip, IEpubLogWriter logWriter);
 }

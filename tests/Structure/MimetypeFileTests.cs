@@ -24,9 +24,11 @@ namespace DG.Epub.Tests.Structure
         {
             using (var stream = TextAsStream(MimetypeFile.ExpectedMimetype))
             {
-                var result = MimetypeFile.Parse(stream);
+                EpubLogCollection log = new EpubLogCollection();
 
-                result.MaxLogLevel.Should().Match(l => l <= EpubLogLevel.Informational);
+                MimetypeFile.TryParse(stream, log, out MimetypeFile _).Should().BeTrue();
+
+                log.HighestSeverity.Should().Match(l => l <= EpubLogLevel.Informational);
             }
         }
 
@@ -35,9 +37,11 @@ namespace DG.Epub.Tests.Structure
         {
             using (var stream = TextAsStream(MimetypeFile.ExpectedMimetype, new UTF8Encoding(true)))
             {
-                var result = MimetypeFile.Parse(stream);
+                EpubLogCollection log = new EpubLogCollection();
 
-                result.MaxLogLevel.Should().Match(l => l >= EpubLogLevel.Warning);
+                MimetypeFile.TryParse(stream, log, out MimetypeFile _).Should().BeTrue();
+
+                log.HighestSeverity.Should().Match(l => l >= EpubLogLevel.Warning);
             }
         }
 
@@ -46,9 +50,11 @@ namespace DG.Epub.Tests.Structure
         {
             using (var stream = TextAsStream("application/zip"))
             {
-                var result = MimetypeFile.Parse(stream);
+                EpubLogCollection log = new EpubLogCollection();
 
-                result.MaxLogLevel.Should().Match(l => l >= EpubLogLevel.Error);
+                MimetypeFile.TryParse(stream, log, out MimetypeFile _).Should().BeTrue();
+
+                log.HighestSeverity.Should().Match(l => l >= EpubLogLevel.Error);
             }
         }
 
@@ -57,9 +63,11 @@ namespace DG.Epub.Tests.Structure
         {
             using (var stream = TextAsStream(MimetypeFile.ExpectedMimetype + "+txt"))
             {
-                var result = MimetypeFile.Parse(stream);
+                EpubLogCollection log = new EpubLogCollection();
 
-                result.MaxLogLevel.Should().Match(l => l >= EpubLogLevel.Error);
+                MimetypeFile.TryParse(stream, log, out MimetypeFile _).Should().BeTrue();
+
+                log.HighestSeverity.Should().Match(l => l >= EpubLogLevel.Error);
             }
         }
     }
