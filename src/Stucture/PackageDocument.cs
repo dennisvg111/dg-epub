@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DG.Epub.Stucture
+﻿namespace DG.Epub.Stucture
 {
-    internal class PackageDocument
+    public class PackageDocument
     {
+        public string Dir { get; set; }
+        public string Id { get; set; }
     }
 }
