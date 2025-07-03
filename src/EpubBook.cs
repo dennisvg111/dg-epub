@@ -22,4 +22,6 @@ public class EpubBook
     /// Gets or sets the container file associated with the current EPUB book.
     /// </summary>
     public ContainerFile? ContainerFile { get; set; }
+
+    public PackageDocument PackageDocument { get; set; }
 }
