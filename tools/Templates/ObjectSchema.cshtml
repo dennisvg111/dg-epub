@@ -4,6 +4,16 @@
 @using RazorLight
 @inherits TemplatePage<ObjectClassModel>
 
+@if (!string.IsNullOrEmpty(Model.ClassSchema.XmlType))
+{
+<text>[XmlType("@Model.ClassSchema.XmlType")]
+</text>
+}
+@if (!string.IsNullOrEmpty(Model.ClassSchema.XmlRoot))
+{
+<text>[XmlRoot("@Model.ClassSchema.XmlRoot")]
+</text>
+}
 public partial class @(SchemaHelpers.ToPascalCase(Model.Name))
 {
 @if (Model.ClassSchema.Properties != null)

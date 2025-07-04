@@ -1,5 +1,8 @@
 ﻿container:
   type: object
+  xml_type: container
+  xml_root: container
+  xml_namespace: urn:oasis:names:tc:opendocument:xmlns:container
   attributes:
     version:
       type: string
