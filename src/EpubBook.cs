@@ -23,5 +23,5 @@ public class EpubBook
     /// </summary>
     public ContainerFile? ContainerFile { get; set; }
 
-    public PackageDocument PackageDocument { get; set; }
+    public PackageDocument? PackageDocument { get; set; }
 }

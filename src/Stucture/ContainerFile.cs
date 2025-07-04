@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Epub.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,11 +13,6 @@ namespace DG.Epub.Stucture
     [XmlRoot("container")]
     public class ContainerFile
     {
-        /// <summary>
-        /// The XML namespace for the container format.
-        /// </summary>
-        public const string XmlNamespace = "urn:oasis:names:tc:opendocument:xmlns:container";
-
         public const string XmlRootfileCollectionName = "rootfiles";
 
         /// <summary>
@@ -53,9 +49,9 @@ namespace DG.Epub.Stucture
 
         public void WriteTo(XmlWriter xmlWriter)
         {
-            XmlSerializer xsSubmit = new XmlSerializer(typeof(ContainerFile), XmlNamespace);
+            XmlSerializer xsSubmit = new XmlSerializer(typeof(ContainerFile), XmlNamespaces.Container);
             var namespaces = new XmlSerializerNamespaces();
-            namespaces.Add("", XmlNamespace);
+            namespaces.Add("", XmlNamespaces.Container);
 
             xsSubmit.Serialize(xmlWriter, this, namespaces);
         }

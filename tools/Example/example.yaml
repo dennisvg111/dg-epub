@@ -1,0 +1,47 @@
+﻿container:
+  type: object
+  attributes:
+    version:
+      type: string
+      default: "1.0"
+      expected_value: "1.0"
+  properties:
+    id:
+      type: string
+    rootfiles:
+      items:
+        $ref: "#rootfile"
+      type: array
+    numbers:
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+      type: array
+
+rootfile:
+  type: object
+  attributes:
+    full_path:
+      type: string
+      xml_name: "full-path"
+      default: "OEBPS/content.opf"
+    media_type:
+      type: string
+      xml_name: "media-type"
+      default: "application/oebps-package+xml"
+
+package:
+  type: object
+  attributes:
+    dir:
+      $ref: "#base_text_direction"
+  properties:
+      
+base_text_direction:
+  type: string
+  enum:
+    - auto
+    - ltr
+    - rtl

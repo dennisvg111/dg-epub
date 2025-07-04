@@ -1,0 +1,39 @@
+﻿@model ObjectClassModel
+@using DG.Epub.CodeGeneration.Models
+@using DG.Epub.CodeGeneration.Models.Schema
+@using RazorLight
+@inherits TemplatePage<ObjectClassModel>
+
+public partial class @(SchemaHelpers.ToPascalCase(Model.Name))
+{
+@if (Model.ClassSchema.Properties != null)
+{
+    foreach (var property in Model.ClassSchema.Properties)
+    {
+        if (property.Value is ArraySchema arraySchema)
+        {
+            <text>
+                [XmlArray("")]
+
+            </text>
+        }
+        else
+        {
+            <text>
+                [XmlElement("")]
+            </text>
+        }
+    }
+}
+
+    @if (Model.ClassSchema.Attributes != null)
+    {
+        foreach (var attribute in Model.ClassSchema.Attributes)
+        {
+<text>
+    [XmlAttribute("@(SchemaHelpers.GetXmlName(attribute))")]
+    public @(SchemaHelpers.GetCSharpName(attribute)) { get; set; }
+</text>
+        }
+    }
+}

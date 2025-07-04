@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace DG.Epub.Parsing;
 
@@ -31,17 +32,19 @@ public class EpubParsingPipeline
     /// <param name="parsers">A read-only list of <see cref="IEpubParsingPipelineStep"/> instances that define the steps for parsing EPUB files. Each step in the pipeline is executed sequentially.</param>
     public EpubParsingPipeline(IReadOnlyList<IEpubParsingPipelineStep> parsers)
     {
-        _parsers = parsers;
+        // We create a copy so changes to the list afterward aren't reflected in this pipeline.
+        _parsers = parsers.ToList();
     }
 
     /// <summary>
     /// Parses an EPUB file from the provided stream and returns the resulting book along with parsing logs.
     /// </summary>
-    /// <remarks>This method processes the EPUB file using a pipeline of parsers.
+    /// <remarks>
+    /// This method processes the EPUB file using a pipeline of parsers.
     /// If a parser encounters a fatal error, the parsing process stops early, and the result will include the partial book data and logs up to the point of failure.
     /// </remarks>
     /// <param name="s">The input stream containing the EPUB file. The stream must support reading and must not be null.</param>
-    /// <param name="minimumLogLevel">The minimum log level to include in the parsing logs. Defaults to <see langword="EPubLogLevel.Informational"/>.</param>
+    /// <param name="minimumLogLevel">The minimum log level to include in the parsing logs. Defaults to <see cref="EpubLogLevel.Informational"/>.</param>
     /// <returns>An <see cref="EpubComponentResult{EpubBook}"/> containing the parsed <see cref="EpubBook"/> and a collection of logs generated during the parsing process.</returns>
     public EpubComponentResult<EpubBook> Parse(Stream s, EpubLogLevel minimumLogLevel = EpubLogLevel.Informational)
     {

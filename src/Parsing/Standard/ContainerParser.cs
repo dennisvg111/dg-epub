@@ -1,4 +1,5 @@
-﻿using DG.Epub.Extensions;
+﻿using DG.Epub.Constants;
+using DG.Epub.Extensions;
 using DG.Epub.Logging;
 using DG.Epub.Stucture;
 using System.Collections.Generic;
@@ -66,7 +67,7 @@ internal class ContainerParser : IEpubComponentParser<ContainerFile>
 
     private static bool TryGetRootFiles(XElement xmlContainer, out IEnumerable<XElement>? xmlRootFiles)
     {
-        var xmlNamespace = XNamespace.Get(ContainerFile.XmlNamespace);
+        var xmlNamespace = XNamespace.Get(XmlNamespaces.Container);
         var xmlRootFileCollection = xmlContainer?.Element(xmlNamespace + ContainerFile.XmlRootfileCollectionName);
         xmlRootFiles = xmlRootFileCollection?.Elements(xmlNamespace + RootFileInformation.XmlTypeName);
 
