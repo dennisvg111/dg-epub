@@ -12,4 +12,6 @@ public abstract class BaseSchema
         name = null;
         return false;
     }
+
+    public abstract string GetTypename();
 }

@@ -8,16 +8,11 @@
   properties:
     id:
       type: string
+    single_file:
+      $ref: "#package"
     rootfiles:
       items:
         $ref: "#rootfile"
-      type: array
-    numbers:
-      items:
-        type: object
-        properties:
-          id:
-            type: string
       type: array
 
 rootfile:

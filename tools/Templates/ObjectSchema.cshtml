@@ -12,28 +12,28 @@ public partial class @(SchemaHelpers.ToPascalCase(Model.Name))
     {
         if (property.Value is ArraySchema arraySchema)
         {
-            <text>
-                [XmlArray("")]
-
-            </text>
+<text>
+    [XmlArray("@(SchemaHelpers.GetXmlName(property))")]
+    public @(property.Value.GetTypename()) @(SchemaHelpers.GetCSharpName(property)) { get; set; }
+</text>
         }
         else
         {
-            <text>
-                [XmlElement("")]
-            </text>
-        }
-    }
-}
-
-    @if (Model.ClassSchema.Attributes != null)
-    {
-        foreach (var attribute in Model.ClassSchema.Attributes)
-        {
 <text>
-    [XmlAttribute("@(SchemaHelpers.GetXmlName(attribute))")]
-    public @(SchemaHelpers.GetCSharpName(attribute)) { get; set; }
+    [XmlElement("@(SchemaHelpers.GetXmlName(property))")]
+    public @(property.Value.GetTypename()) @(SchemaHelpers.GetCSharpName(property)) { get; set; }
 </text>
         }
     }
+}
+@if (Model.ClassSchema.Attributes != null)
+{
+    foreach (var attribute in Model.ClassSchema.Attributes)
+    {
+<text>
+    [XmlAttribute("@(SchemaHelpers.GetXmlName(attribute))")]
+    public @(attribute.Value.GetTypename()) @(SchemaHelpers.GetCSharpName(attribute)) { get; set; }
+</text>
+    }
+}
 }

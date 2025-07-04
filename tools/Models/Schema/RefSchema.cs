@@ -19,4 +19,9 @@ public class RefSchema : BaseSchema
 
         return resolved.Resolve(schemaMap); // Recursively resolve
     }
+
+    public override string GetTypename()
+    {
+        return SchemaHelpers.ToPascalCase(Ref.TrimStart('#'));
+    }
 }

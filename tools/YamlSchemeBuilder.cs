@@ -25,6 +25,8 @@ public static class YamlSchemeBuilder
         // Step 1: Load the whole schema map
         var schemaMap = deserializer.Deserialize<Dictionary<string, BaseSchema>>(yaml);
 
+        return schemaMap;
+
         // TODO: throw exception if unnamed object types exist, or add them to scheme map with generated name.
     }
 }

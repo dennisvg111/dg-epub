@@ -19,4 +19,9 @@ public class StringSchema : BaseSchema
         name = XmlName;
         return !string.IsNullOrEmpty(name);
     }
+
+    public override string GetTypename()
+    {
+        return "string";
+    }
 }
