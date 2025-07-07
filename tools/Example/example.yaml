@@ -1,13 +1,10 @@
 ﻿container:
   type: object
-  xml_type: container
-  xml_root: container
   xml_namespace: urn:oasis:names:tc:opendocument:xmlns:container
   attributes:
     version:
       type: string
-      default: "1.0"
-      expected_value: "1.0"
+      fixed: "1.0"
   properties:
     id:
       type: string
@@ -28,7 +25,7 @@ rootfile:
     media_type:
       type: string
       xml_name: "media-type"
-      default: "application/oebps-package+xml"
+      fixed: "application/oebps-package+xml"
 
 package:
   type: object
