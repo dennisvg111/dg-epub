@@ -22,13 +22,8 @@ internal class Program
             Schema = schemaMap
         };
 
-        var result = await CompileTemplates(model);
-
-        Console.WriteLine(result);
-
-
         var xsdDocument = XsdGenerator.GenerateXsd(schemaMap);
-        WriteXDocument(xsdDocument);
+        await WriteXDocument(xsdDocument);
         var xmlSchemaSet = LoadSchemaSetFromXDocument(xsdDocument);
 
         var generator = new Generator()
@@ -45,20 +40,24 @@ internal class Program
         generator.Configuration.SeparateClasses = false;
         generator.Configuration.SeparateNamespaceHierarchy = false;
         generator.Configuration.CommentLanguages.Add("en");
+        generator.Configuration.Log = (s) => Console.WriteLine("[XmlSchemaClassGenerator] " + s);
 
         generator.Generate(xmlSchemaSet);
     }
 
-    private static void WriteXDocument(XDocument document)
+    private static async Task WriteXDocument(XDocument document)
     {
-        XmlWriterSettings xws = new XmlWriterSettings();
-        xws.OmitXmlDeclaration = true;
-        xws.Indent = true;
+        var xws = new XmlWriterSettings
+        {
+            OmitXmlDeclaration = true,
+            Indent = true,
+            Async = true,
+        };
 
         using (var stream = File.Create(@"C:\Temp\new.xsd"))
         using (XmlWriter xw = XmlWriter.Create(stream, xws))
         {
-            document.Save(xw);
+            await document.SaveAsync(xw, CancellationToken.None);
         }
     }
 
