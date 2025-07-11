@@ -154,7 +154,7 @@ public class XsdGenerator
 
         if (objectSchema.Properties != null)
         {
-            var sequence = new XElement(xs + "all");
+            var sequence = new XElement(xs + "sequence");
             foreach (var (propName, propSchema) in objectSchema.Properties)
             {
                 if (!propSchema.TryGetXmlName(out string xmlName))
@@ -194,7 +194,12 @@ public class XsdGenerator
     {
         AddDescriptionFromSchema(propertyElement, schema);
 
-        propertyElement.Add(GetTypeAttributeForSchema(schema));
+        var typeAttribute = GetTypeAttributeForSchema(schema);
+        if (typeAttribute != null)
+        {
+            propertyElement.Add(typeAttribute);
+        }
+
         propertyElement.Add(new XAttribute("minOccurs", "0"));
     }
 
@@ -216,16 +221,50 @@ public class XsdGenerator
         }
     }
 
-    private static XAttribute GetTypeAttributeForSchema(BaseSchema schema)
+    private static XObject GetTypeAttributeForSchema(BaseSchema schema)
     {
         switch (schema)
         {
-            case RefSchema RefSchema:
-                return new XAttribute("type", "tns:" + RefSchema.Ref.TrimStart('#'));
+            case ArraySchema arraySchema:
+                return GetArrayElement(arraySchema);
+            case RefSchema refSchema:
+                return new XAttribute("type", "tns:" + refSchema.Ref.TrimStart('#'));
             case StringSchema stringSchema:
             default:
                 return new XAttribute("type", "xs:string");
         }
+    }
+
+    private static XElement GetArrayElement(ArraySchema arraySchema)
+    {
+        XElement childElement = null;
+        switch (arraySchema.Items)
+        {
+            case ObjectSchema objectSchema:
+                childElement = CreateElementForObjectSchema(Guid.NewGuid().ToString(), objectSchema);
+                break;
+            case RefSchema refSchema:
+                childElement = new XElement(xs + "element",
+                    new XAttribute("name", refSchema.Ref.TrimStart('#')),
+                    new XAttribute("type", "tns:" + refSchema.Ref.TrimStart('#'))
+                );
+                break;
+            default:
+                childElement = new XElement(xs + "element",
+                    new XAttribute("name", "asdfasdfasdf"),
+                    GetTypeAttributeForSchema(arraySchema.Items)
+                );
+                break;
+        }
+        childElement.Add(
+            new XAttribute("minOccurs", "0"),
+            new XAttribute("maxOccurs", "unbounded")
+        );
+        return new XElement(xs + "complexType",
+            new XElement(xs + "sequence",
+                childElement
+            )
+        );
     }
 
     private static void AddDescriptionFromSchema(XContainer element, BaseSchema schema)
