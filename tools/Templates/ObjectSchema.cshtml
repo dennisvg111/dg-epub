@@ -1,0 +1,49 @@
+﻿@model ObjectClassModel
+@using DG.Epub.CodeGeneration.Models
+@using DG.Epub.CodeGeneration.Models.Schema
+@using RazorLight
+@inherits TemplatePage<ObjectClassModel>
+
+@if (!string.IsNullOrEmpty(Model.ClassSchema.XmlType))
+{
+<text>[XmlType("@Model.ClassSchema.XmlType")]
+</text>
+}
+@if (!string.IsNullOrEmpty(Model.ClassSchema.XmlRoot))
+{
+<text>[XmlRoot("@Model.ClassSchema.XmlRoot")]
+</text>
+}
+public partial class @(SchemaHelpers.ToPascalCase(Model.Name))
+{
+@if (Model.ClassSchema.Properties != null)
+{
+    foreach (var property in Model.ClassSchema.Properties)
+    {
+        if (property.Value is ArraySchema arraySchema)
+        {
+<text>
+    [XmlArray("@(SchemaHelpers.GetXmlName(property))")]
+    public @(property.Value.GetTypename()) @(SchemaHelpers.GetCSharpName(property)) { get; set; }
+</text>
+        }
+        else
+        {
+<text>
+    [XmlElement("@(SchemaHelpers.GetXmlName(property))")]
+    public @(property.Value.GetTypename()) @(SchemaHelpers.GetCSharpName(property)) { get; set; }
+</text>
+        }
+    }
+}
+@if (Model.ClassSchema.Attributes != null)
+{
+    foreach (var attribute in Model.ClassSchema.Attributes)
+    {
+<text>
+    [XmlAttribute("@(SchemaHelpers.GetXmlName(attribute))")]
+    public @(attribute.Value.GetTypename()) @(SchemaHelpers.GetCSharpName(attribute)) { get; set; }
+</text>
+    }
+}
+}

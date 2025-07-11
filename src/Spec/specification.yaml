@@ -1,0 +1,51 @@
+﻿container:
+  type: object
+  description: "The container.xml file in the META-INF directory identifies the package documents available in the OCF abstract container."
+  xml_namespace: urn:oasis:names:tc:opendocument:xmlns:container
+  attributes:
+    version:
+      description: "This attribute MUST have the value '1.0'."
+      type: string
+      fixed: "1.0"
+  properties:
+    id:
+      type: string
+    rootfiles:
+      items:
+        $ref: "#rootfile"
+      type: array
+    links:
+      items:
+        type: string
+      type: array
+
+rootfile:
+  type: object
+  attributes:
+    full_path:
+      type: string
+      xml_name: "full-path"
+      default: "OEBPS/content.opf"
+    media_type:
+      type: string
+      xml_name: "media-type"
+      fixed: "application/oebps-package+xml"
+
+package:
+  type: object
+  attributes:
+    dir:
+      description: "Specifies the base direction [bidi] of the textual content and attribute values of the carrying element and its descendants."
+      $ref: "#base_text_direction"
+    id:
+      type: string
+  properties:
+      
+      
+base_text_direction:
+  type: string
+  description: "The type of directionality for text display."
+  enum:
+    - auto
+    - ltr
+    - rtl

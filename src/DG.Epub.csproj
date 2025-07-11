@@ -2,6 +2,8 @@
 	<PropertyGroup>
 		<ProjectGuid>354dcb2f-5995-4bd9-bb0a-24b3dfdee855</ProjectGuid>
 		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 		<AssemblyTitle>DG.Epub</AssemblyTitle>
 		<AssemblyVersion>0.0.3</AssemblyVersion>
 		<Product>DG.Epub</Product>
@@ -46,8 +48,24 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+		<None Include="C:\Users\d.vangils\source\repos\dennisvg111\dg-epub\src\.editorconfig" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Dennisvg.DG.Common" Version="2.4.0" />
 	</ItemGroup>
+	<ItemGroup>
+	  <EditorConfigFiles Remove="C:\Users\d.vangils\source\repos\dennisvg111\dg-epub\src\.editorconfig" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Spec\specification.yaml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Generated\" />
+	</ItemGroup>
+
+	<Target Name="NSwag" AfterTargets="PostBuildEvent">
+		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet run --project ..\tools\DG.Epub.CodeGeneration.csproj .\Spec\specification.yaml -o=.\Generated -n=DG.Epub.Generated" />
+	</Target>
 </Project>

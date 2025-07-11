@@ -1,17 +1,27 @@
-﻿using System.IO;
-using System.IO.Compression;
+﻿using DG.Epub.Parsing;
+using DG.Epub.Stucture;
 
-namespace DG.Epub
+namespace DG.Epub;
+
+/// <summary>
+/// Represents an EPUB book, providing functionality to interact with EPUB file data.
+/// </summary>
+/// <remarks>
+/// <para>This class serves as the main entry point for working with EPUB files.</para>
+/// <para>Use the <see cref="EpubParsingPipeline"/> class to create an instance of <see cref="EpubBook"/> from a valid EPUB file.</para>
+/// </remarks>
+public class EpubBook
 {
-    public class EpubBook
-    {
+    /// <summary>
+    /// Gets or sets the MIME type file associated with the current EPUB book.
+    /// </summary>
+    /// <remarks>This should usually be <see cref="MimetypeFile.Default"/>.</remarks>
+    public MimetypeFile? MimetypeFile { get; set; }
 
-        public static EpubBook FromStream(Stream s)
-        {
-            using (ZipArchive zip = new ZipArchive(s, ZipArchiveMode.Read, false, null))
-            {
-                return null;
-            }
-        }
-    }
+    /// <summary>
+    /// Gets or sets the container file associated with the current EPUB book.
+    /// </summary>
+    public ContainerFile? ContainerFile { get; set; }
+
+    public PackageDocument? PackageDocument { get; set; }
 }
