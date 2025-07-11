@@ -1,5 +1,6 @@
 ﻿using DG.Epub.CodeGeneration.Models;
 using RazorLight;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -9,16 +10,54 @@ namespace DG.Epub.CodeGeneration;
 
 internal class Program
 {
+    private const string _outputFolderFlag = "outputFolder";
+    private const string _namespacePrefixFlag = "namespacePrefix";
+
+
     static async Task Main(string[] args)
     {
-        var yaml = File.ReadAllText("Example/example.yaml");
+        string input = null;
+        string outputFolder = null;
+        string namespacePrefix = null;
+
+        if (args.Length == 0)
+        {
+            Console.Write(GetHelp());
+            return;
+        }
+        foreach (var arg in args)
+        {
+            if (arg.Equals("--help", StringComparison.OrdinalIgnoreCase) || arg.Equals("-h", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.Write(GetHelp());
+                return;
+            }
+            if (arg.StartsWith($"--{_outputFolderFlag}=", StringComparison.OrdinalIgnoreCase) || arg.StartsWith("-o=", StringComparison.OrdinalIgnoreCase))
+            {
+                outputFolder = arg.Substring(arg.IndexOf("=") + 1).Trim();
+            }
+            else if (arg.StartsWith($"--{_namespacePrefixFlag}=", StringComparison.OrdinalIgnoreCase) || arg.StartsWith("-n=", StringComparison.OrdinalIgnoreCase))
+            {
+                namespacePrefix = arg.Substring(arg.IndexOf("=") + 1).Trim();
+            }
+            else if (input == null)
+            {
+                input = arg;
+            }
+            else
+            {
+                throw new ArgumentException($"Unexpected argument: '{arg}'");
+            }
+
+        }
+        var yaml = File.ReadAllText(input);
 
         var schemaMap = YamlSchemeBuilder.BuildSchema(yaml);
 
         var model = new MasterModel()
         {
             FileName = "test.cs",
-            Namespace = "DG.Epub.Generated",
+            Namespace = namespacePrefix,
             Schema = schemaMap
         };
 
@@ -28,17 +67,18 @@ internal class Program
 
         var generator = new Generator()
         {
-            Log = s => Console.WriteLine(s),
-            OutputFolder = @"C:\Temp",
+            OutputFolder = outputFolder,
             GenerateInterfaces = true,
             GenerateComplexTypesForCollections = false,
             CollectionImplementationType = typeof(List<>),
             CollectionType = typeof(List<>),
+            EnableNullableReferenceAttributes = false,
+            DataAnnotationMode = DataAnnotationMode.None,
             NamespaceProvider = new Dictionary<NamespaceKey, string>
             {
                 { new NamespaceKey("http://www.w3.org/2001/XMLSchema"), "xsd" }
             }
-            .ToNamespaceProvider(new GeneratorConfiguration { NamespacePrefix = "DG.Epub.Generated" }.NamespaceProvider.GenerateNamespace),
+            .ToNamespaceProvider(new GeneratorConfiguration { NamespacePrefix = namespacePrefix }.NamespaceProvider.GenerateNamespace),
         };
         generator.Configuration.SeparateClasses = false;
         generator.Configuration.SeparateNamespaceHierarchy = false;
@@ -46,6 +86,21 @@ internal class Program
         generator.Configuration.Log = (s) => Console.WriteLine("[XmlSchemaClassGenerator] " + s);
 
         generator.Generate(xmlSchemaSet);
+    }
+
+    private static string GetHelp()
+    {
+        return new StringBuilder()
+            .AppendLine("Usage:")
+            .AppendLine("  dotnet run INPUT [-o=PATH] [-n=PREFIX] [-h|--help]")
+            .AppendLine()
+            .AppendLine("Options:")
+            .AppendLine("  INPUT:                               Path to the input yaml file.")
+            .AppendLine($"  --{_outputFolderFlag}=PATH, -o=PATH         Folder to write output files.")
+            .AppendLine($"  --{_namespacePrefixFlag}=PREFIX, -n=PREFIX  Namespace prefix to use.")
+            .AppendLine("  --help, -h                           Show this help message.")
+            .ToString();
+
     }
 
     private static async Task WriteXDocument(XDocument document)

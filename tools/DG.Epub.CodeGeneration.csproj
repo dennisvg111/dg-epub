@@ -10,17 +10,15 @@
 
   <ItemGroup>
     <PackageReference Include="RazorLight" Version="2.3.1" />
-    <PackageReference Include="XmlSchemaClassGenerator-beta" Version="2.1.1184" />
+    <PackageReference Include="XmlSchemaClassGenerator-beta" Version="3.0.1185" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Example\example.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+	<EmbeddedResource Include="Templates\*.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-	<EmbeddedResource Include="Templates\*.cshtml" />
+    <Folder Include="Example\" />
   </ItemGroup>
 </Project>

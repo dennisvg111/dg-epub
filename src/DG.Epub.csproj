@@ -56,4 +56,16 @@
 	<ItemGroup>
 	  <EditorConfigFiles Remove="C:\Users\d.vangils\source\repos\dennisvg111\dg-epub\src\.editorconfig" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Spec\specification.yaml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Generated\" />
+	</ItemGroup>
+
+	<Target Name="NSwag" AfterTargets="PostBuildEvent">
+		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet run --project ..\tools\DG.Epub.CodeGeneration.csproj .\Spec\specification.yaml -o=.\Generated -n=DG.Epub.Generated" />
+	</Target>
 </Project>
