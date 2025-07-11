@@ -14,6 +14,10 @@
       items:
         $ref: "#rootfile"
       type: array
+    links:
+      items:
+        type: string
+      type: array
 
 rootfile:
   type: object

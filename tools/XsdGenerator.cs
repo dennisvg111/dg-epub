@@ -194,6 +194,14 @@ public class XsdGenerator
     {
         AddDescriptionFromSchema(propertyElement, schema);
 
+        if (schema is ArraySchema arraySchema)
+        {
+            // Replace propertyElement content with an anonymous complex type
+            var arrayElement = GetArrayElement(arraySchema);
+            propertyElement.Add(arrayElement);
+            return;
+        }
+
         var typeAttribute = GetTypeAttributeForSchema(schema);
         if (typeAttribute != null)
         {
@@ -225,8 +233,6 @@ public class XsdGenerator
     {
         switch (schema)
         {
-            case ArraySchema arraySchema:
-                return GetArrayElement(arraySchema);
             case RefSchema refSchema:
                 return new XAttribute("type", "tns:" + refSchema.Ref.TrimStart('#'));
             case StringSchema stringSchema:
@@ -237,33 +243,17 @@ public class XsdGenerator
 
     private static XElement GetArrayElement(ArraySchema arraySchema)
     {
-        XElement childElement = null;
-        switch (arraySchema.Items)
-        {
-            case ObjectSchema objectSchema:
-                childElement = CreateElementForObjectSchema(Guid.NewGuid().ToString(), objectSchema);
-                break;
-            case RefSchema refSchema:
-                childElement = new XElement(xs + "element",
-                    new XAttribute("name", refSchema.Ref.TrimStart('#')),
-                    new XAttribute("type", "tns:" + refSchema.Ref.TrimStart('#'))
-                );
-                break;
-            default:
-                childElement = new XElement(xs + "element",
-                    new XAttribute("name", "asdfasdfasdf"),
-                    GetTypeAttributeForSchema(arraySchema.Items)
-                );
-                break;
-        }
-        childElement.Add(
+        XElement itemElement = new XElement(xs + "element",
+            new XAttribute("name", "item"),
             new XAttribute("minOccurs", "0"),
             new XAttribute("maxOccurs", "unbounded")
         );
+
+        var typeAttribute = GetTypeAttributeForSchema(arraySchema.Items);
+        itemElement.Add(typeAttribute);
+
         return new XElement(xs + "complexType",
-            new XElement(xs + "sequence",
-                childElement
-            )
+            new XElement(xs + "sequence", itemElement)
         );
     }
 

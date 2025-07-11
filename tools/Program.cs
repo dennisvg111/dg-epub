@@ -31,6 +31,9 @@ internal class Program
             Log = s => Console.WriteLine(s),
             OutputFolder = @"C:\Temp",
             GenerateInterfaces = true,
+            GenerateComplexTypesForCollections = false,
+            CollectionImplementationType = typeof(List<>),
+            CollectionType = typeof(List<>),
             NamespaceProvider = new Dictionary<NamespaceKey, string>
             {
                 { new NamespaceKey("http://www.w3.org/2001/XMLSchema"), "xsd" }
