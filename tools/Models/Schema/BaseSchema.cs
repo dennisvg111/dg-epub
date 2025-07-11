@@ -3,6 +3,7 @@
 public abstract class BaseSchema
 {
     public string Type { get; set; }
+    public string Description { get; set; }
 
     public virtual BaseSchema Resolve(Dictionary<string, BaseSchema> schemaMap)
         => this;
