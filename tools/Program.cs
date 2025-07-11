@@ -54,15 +54,8 @@ internal class Program
 
         var schemaMap = YamlSchemeBuilder.BuildSchema(yaml);
 
-        var model = new MasterModel()
-        {
-            FileName = "test.cs",
-            Namespace = namespacePrefix,
-            Schema = schemaMap
-        };
-
         var xsdDocument = XsdGenerator.GenerateXsd(schemaMap);
-        await WriteXDocument(xsdDocument);
+        //await WriteXDocument(xsdDocument);
         var xmlSchemaSet = LoadSchemaSetFromXDocument(xsdDocument);
 
         var generator = new Generator()
